@@ -6,26 +6,28 @@ export default async function handler(req, res) {
   const { message } = req.body;
 
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: message }] }]
-        })
-      }
-    );
-    
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: message }] }]
+      })
+    }
+  );
 
-    const result = await response.json();
-    const reply =
-      result.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "⚠️ No reply received.";
+  const result = await response.json();
 
-    res.status(200).json({ reply });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Something went wrong." });
+  // 👇 Add this line to see full response in Vercel logs
+  console.log("Gemini API response:", JSON.stringify(result, null, 2));
+
+  const reply =
+    result.candidates?.[0]?.content?.parts?.[0]?.text ||
+    "⚠️ No reply received.";
+
+  res.status(200).json({ reply });
+} catch (error) {
+  console.error("Gemini API error:", error);
+  res.status(500).json({ error: "Something went wrong." });
   }
-}
