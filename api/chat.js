@@ -13,16 +13,20 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "sonoma-dusk", 
+        model: "sonoma-dusk",   // ✅ make sure this model name exists
         messages: [{ role: "user", content: message }]
       })
     });
 
     const result = await response.json();
-    const reply = result.choices?.[0]?.message?.content || "⚠️ No reply received.";
 
+    // Debugging: log the full API response
+    console.log(result);
+
+    const reply = result.choices?.[0]?.message?.content || "⚠️ No reply received.";
     res.status(200).json({ reply });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Something went wrong." });
   }
 }
