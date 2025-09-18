@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FALCON AI</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .chat-container {
+      background: #fff;
+      width: 100%;
+      max-width: 420px;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+
+    /* Header */
+    .chat-header {
+      background: #6e8efb;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      font-size: 1.2em;
+      font-weight: 600;
+    }
+
+    /* Chat box */
+    .chat-box {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #f9f9fb;
+    }
+
+    .message {
+      max-width: 75%;
+      padding: 10px 14px;
+      border-radius: 20px;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .ai {
+      align-self: flex-start;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #6e8efb, #4db6ac);
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    /* Input area */
+    .chat-input {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #ddd;
+      background: #fff;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 25px;
+      outline: none;
+      background: #f1f1f1;
+      font-size: 1em;
+    }
+
+    .chat-input button {
+      margin-left: 8px;
+      background: #6e8efb;
+      border: none;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: 0.3s;
+    }
+
+    .chat-input button:hover {
+      background: #5a77d6;
+    }
+
+    .chat-input button span {
+      color: white;
+      font-size: 1.2em;
+    }
+
+    /* Scrollbar */
+    .chat-box::-webkit-scrollbar {
+      width: 6px;
+    }
+    .chat-box::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 3px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header"> FALCON AI</div>
+
+    <div class="chat-box" id="chat-box">
+      <div class="message ai">Hello! I’m FALCON, your AI assistant 🤗</div>
+    </div>
+
+    <div class="chat-input">
+      <input id="user-input" type="text" placeholder="Type a message...">
+      <button id="send-btn"><span>✈</span></button>
+    </div>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chat-box");
+    const userInput = document.getElementById("user-input");
+    const sendBtn = document.getElementById("send-btn");
+
+    function addMessage(text, sender) {
+      const msg = document.createElement("div");
+      msg.classList.add("message", sender);
+      msg.textContent = text;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight; // auto-scroll
+    }
+
+    async function sendMessage() {
+      const text = userInput.value.trim();
+      if (!text) return;
+
+      addMessage(text, "user");
+      userInput.value = "";
+
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text })
+        });
+
+        const data = await response.json();
+        addMessage(data.reply, "ai");
+      } catch (err) {
+        addMessage("⚠️ Error: Could not connect to FALCON.", "ai");
+      }
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    userInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+  </script>
+</body>
+</html>
