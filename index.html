@@ -47,6 +47,7 @@
       border-radius: 20px;
       line-height: 1.4;
       animation: fadeIn 0.3s ease-in-out;
+      white-space: pre-wrap;
     }
     .user {
       align-self: flex-end;
@@ -93,15 +94,15 @@
     <div class="chat-box" id="chat-box"></div>
     <div class="chat-input">
       <input type="text" id="user-input" placeholder="Type a message..."/>
-      <button onclick="sendMessage()">✈</button>
+      <button id="send-btn">✈</button>
     </div>
   </div>
 
   <script>
     const API_KEY = "AIzaSyB2JQrfKFCjT5ox-Y8Apc4AuJfzUR-StrA"; // ⚠️ Replace with your key (visible!)
-
     const chatBox = document.getElementById("chat-box");
     const userInput = document.getElementById("user-input");
+    const sendBtn = document.getElementById("send-btn");
 
     function addMessage(text, sender) {
       const msg = document.createElement("div");
@@ -143,6 +144,12 @@
         addMessage("⚠️ Error connecting to AI.", "ai");
       }
     }
+
+    // ✅ Attach events
+    sendBtn.addEventListener("click", sendMessage);
+    userInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
   </script>
 </body>
 </html>
