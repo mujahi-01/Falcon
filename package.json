@@ -1,5 +1,23 @@
 {
-  "name": "falcon",
-  "version": "1.0.0",
-  "type": "module"
+  "name": "falcon-cli",
+  "version": "0.1.0",
+  "description": "FALCON CLI — AI-powered terminal agent",
+  "type": "module",
+  "bin": {
+    "falcon": "./bin/falcon.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}{
+  "name": "falcon-cli",
+  "version": "0.1.0",
+  "description": "FALCON CLI — AI-powered terminal agent",
+  "type": "module",
+  "bin": {
+    "falcon": "./bin/falcon.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
 }
